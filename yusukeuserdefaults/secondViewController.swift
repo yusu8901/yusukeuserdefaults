@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  secondViewController.swift
 //  yusukeuserdefaults
 //
 //  Created by yusuke shinmura on 2020/09/19.
@@ -7,9 +7,7 @@
 
 import UIKit
  
-class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate {
-
-
+class secondViewController: UIViewController, UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate{
  
  
     @IBOutlet weak var tableView: UITableView!
@@ -18,7 +16,6 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
     @IBOutlet weak var textField: UITextField!
     
     var todos: Array<String> = []
-   // var done: Bool = false
     
     let userDefaults = UserDefaults.standard
     
@@ -28,16 +25,18 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         
         tableView.dataSource = self
         
+       textField.delegate = self
+        
         tableView.delegate = self
         
-        textField.delegate = self
         
-        if let aaa = userDefaults.object(forKey: "todos") {
+        if let aaa = userDefaults.object(forKey: "stodos") {
             todos = aaa as! Array<String>
-            
         }
         
-
+        
+ 
+        
  
     }
  
@@ -45,7 +44,6 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         super.didReceiveMemoryWarning()
         
     }
-    
     
     
     
@@ -58,64 +56,48 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
     }
     
     
-    
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {// セルの内容を決める。
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.contentView.isUserInteractionEnabled = false
+        
         let todo = todos[indexPath.row]
-
-    
-            
+        
         cell.textLabel?.text = todo
-                           
+        
         return cell
     }
     
-     // セルが選択された時に呼び出される
-       func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-           let cell = tableView.cellForRow(at:indexPath)
+    // セルが選択された時に呼び出される
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at:indexPath)
 
-           // チェックマークを入れる
-           cell?.accessoryType = .checkmark
-       }
+        // チェックマークを入れる
+        cell?.accessoryType = .checkmark
+    }
 
-       // セルの選択が外れた時に呼び出される
-       func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-           let cell = tableView.cellForRow(at:indexPath)
+    // セルの選択が外れた時に呼び出される
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at:indexPath)
 
-           // チェックマークを外す
-           cell?.accessoryType = .none
-       }
-    
-    
-
-    
+        // チェックマークを外す
+        cell?.accessoryType = .none
+    }
     
     
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {// returnキーを押した時の処理
-
         if let text = self.textField.text {
-           
-                
             todos.append(text)
-            userDefaults.set(todos, forKey: "todos")
+            userDefaults.set(todos, forKey: "stodos")
             userDefaults.synchronize()
             
-            todos = userDefaults.object(forKey: "todos") as! Array<String>
-            }
+            todos = userDefaults.object(forKey: "stodos") as! Array<String>
+        }
         
         self.textField.text = ""
         
         self.tableView.reloadData() //データをリロードする
-        
         return true
-}
-    
- 
-
-
+    }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 
@@ -124,26 +106,13 @@ class ViewController: UIViewController, UITableViewDelegate,UITableViewDataSourc
         let indexPaths = [indexPath]
         tableView.deleteRows(at: indexPaths, with: .automatic)
         
-        userDefaults.set(todos, forKey: "todos")
+        userDefaults.set(todos, forKey: "stodos")
         userDefaults.synchronize()
         
-        todos = userDefaults.object(forKey: "todos") as! Array<String>
+        todos = userDefaults.object(forKey: "stodos") as! Array<String>
         self.tableView.reloadData()
 
     }
     
-
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let cell = tableView.cellForRow(at:indexPath)
-//
-//         print(#function + "\(indexPath.row)")
-//
-//
-//    }
-    
-    
     
 }
-
-
-
